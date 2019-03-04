@@ -1,0 +1,158 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Differential Cryptanalysis</title>
+    <script src="./src/vue.min.js"></script>
+    <link rel="icon" href="./src/favicon.png" type="image/x-icon"/>
+    <link rel="shortcut icon" href="./src/favicon.png" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" href="./semantic/dist/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="./style/main.css">
+  </head>
+
+  <body>
+    <script src="./src/analysis.js"></script>
+    <script> var A = new Analysis(); </script>
+
+    <div id="intro">
+      <h1 class="ui center aligned massive header">
+        <a href="https://github.com/xinxiao/Differential">
+          Differential Cryptanalysis
+        </a>
+      </h1>
+      <h2 class="ui center aligned header">
+        <a href="https://github.com/xinxiao">@xinxiao</a>
+      </h2>
+    </div>
+        
+    <div class="ui two column middle aligned very relaxed stackable grid"
+         id="param">
+      <div class="column">
+        <div class="ui large form"
+              id="param_input">
+          <div class="ui stacked segment">
+            <div class="field">
+              <label>Plain text</label>
+              <input v-model="p"
+                     placeholder="One integer from 0-15">
+            </div> 
+            <div class="field">
+              <label>Key</label>
+              <input v-model="k"
+                     placeholder="One to seven integers from 0-15, separated by space">
+            </div>
+            <button class="ui teal right labeled icon button"
+                    v-on:click="analyze"
+                    :disabled="!canGenerate()">
+              <i class="right arrow icon"></i>
+              Analyze
+            </button>
+          </div>
+        </div>
+      </div> 
+      <div class="column">
+      <div class="ui stacked segment"
+           id="param_output">
+          <label class="ui red ribbon label">
+            Cipher text
+          </label>
+          <div class="ui center aligned huge header"
+              >
+            {{ parseAndEncrypt() }}
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div id="stage" v-if="s">
+      <div id="stage_differential_chain">
+        <h2 class="ui header">Chosen Differential Chain</h2>
+        <div class="ui fluid steps">
+          <div class="step" v-for="x in m.dc">
+            <div class="content">
+            <div class="title">
+              {{ x }}
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <div id="stage_general_stat">
+        <h2 class="ui header">General Statistics</h2>
+        <div class="ui horizontal statistics"
+             id="stage_general_stat_list">
+          <div class="statistic">
+            <div class="value">
+              {{ m.gp }}
+            </div>
+            <div class="label">
+              Different differential chains generated
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              {{ m.kt }}
+            </div>
+            <div class="label">
+              Keys generated and tested using the chosen chain
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              {{ 1 << (4 * m.k.length) }}
+            </div>
+            <div class="label">
+              Keys need to be generated and tested if using brute force
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="stage_detail">
+        <h2 class="ui header">Differential Pair During Each Stage</h2>
+
+        <div class="ui segments">
+          <div class="ui horizontal segments">
+            <div class="ui center aligned segment" style="width:80px;">
+              Differential
+            </div>
+            <div class="ui center aligned  segment" style="width:80px;">
+              Current value
+            </div>
+            <div class="ui center aligned segment" style="width:80px;">
+              Paired value
+            </div>
+          </div>
+          <template v-for="(x, i) in m.sp">
+            <div class="ui horizontal segments">
+              <div class="ui center aligned segment" style="width:80px;">
+                {{ m.dc[Math.floor(i / 2)] }}
+              </div>
+              <div class="ui center aligned  segment" style="width:80px;">
+                {{ x[0].join(' - ') }}
+              </div>
+              <div class="ui center aligned segment" style="width:80px;">
+                {{ x[1].join(' - ') }}
+              </div>
+            </div>
+            <div class="ui center aligned segment"
+                 v-if="i + 1 < m.sp.length">
+              <i v-bind:class="[(i & 1) ?  'refresh icon' : 'add circle icon']"></i>
+            </div>
+          </template>
+        </div>
+        <div class="ui labels">
+          <div class="ui label">
+            <i class="add circle icon"></i> Exclusive or
+          </div>
+          <div class="ui label">
+            <i class="refresh icon"></i> Substituition network
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./src/stage.js"></script>
+    <script src="./src/parameter.js"></script>
+  </body>
+</html>

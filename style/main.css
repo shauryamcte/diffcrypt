@@ -1,0 +1,36 @@
+a{
+  color: #000000;
+}
+
+#intro{
+  margin-top: 35px;
+}
+
+#param{
+  margin-top: 25px;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+#param_output{
+  padding-bottom: 5%;
+}
+
+#stage{
+  margin-top: 50px;
+  margin-bottom: 40px;
+  margin-left: 15%;
+  margin-right: 15%;
+}
+
+#stage_general_stat{
+  margin-top: 40px;
+}
+
+#stage_general_stat_list{
+  margin-left: 10%;
+}
+
+#stage_detail{
+  margin-top: 40px;
+}
